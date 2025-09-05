@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:crud_api_app/models/product_item_model.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
@@ -96,17 +99,14 @@ class _AddProductState extends State<AddProduct> {
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(),
-                  onPressed: () {
-                    if (!areFieldsEmpty()) {
-                      final product = saveSendModelData();
-                      print(product.code);
+                  onPressed: () async {
+                    final product = await remoteDataFetch();
+                    if (product != null) {
                       Navigator.pop(context, product);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                            "Please fill out all fields with proper values",
-                          ),
+                          content: Text("something wrong with the data"),
                         ),
                       );
                     }
@@ -122,6 +122,43 @@ class _AddProductState extends State<AddProduct> {
         ),
       ),
     );
+  }
+
+  void localDataFetch() {
+    if (!areFieldsEmpty()) {
+      final product = saveSendModelData();
+      // print(product.code);
+      Navigator.pop(context, product);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please fill out all fields with proper values"),
+        ),
+      );
+    }
+  }
+
+  Future<ProductItemModel?> remoteDataFetch() async {
+    if (!areFieldsEmpty()) {
+      Uri uri = Uri.parse("http://35.73.30.144:2008/api/v1/CreateProduct");
+      final product = saveSendModelData();
+      final requestBody = product.toJson();
+      Response response = await post(
+        uri,
+        body: jsonEncode(requestBody),
+        headers: {"Content-Type": "application/json"},
+      );
+      print(response.statusCode);
+      print(response.body);
+      return product;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please fill out all fields with proper values"),
+        ),
+      );
+      return null;
+    }
   }
 
   bool areFieldsEmpty() {

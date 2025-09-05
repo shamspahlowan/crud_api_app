@@ -40,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
     );
+
     widget.model.add(productItem);
     setState(() {});
   }

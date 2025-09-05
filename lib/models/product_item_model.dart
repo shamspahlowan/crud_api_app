@@ -54,7 +54,7 @@ class ProductItemModel {
       unitPrice = int.parse(teUnitPrice.toString());
       totalPrice = quantity * unitPrice;
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
 
     return ProductItemModel(
