@@ -135,7 +135,7 @@ class _ProductListCardState extends State<ProductListCard> {
                                 child: Text(
                                   "Delete",
                                   style: TextStyle(
-                                    color: const Color(0xFFFF6363),
+                                    color: const Color(0xC9FF6363),
                                   ),
                                 ),
                               ),
